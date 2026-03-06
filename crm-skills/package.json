@@ -1,0 +1,9 @@
+{
+  "name": "crm-skills",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": ["crm-*"],
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "crm-draft",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.0",
+    "crm-db": "*"
+  }
+}

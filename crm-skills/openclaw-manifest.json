@@ -1,0 +1,23 @@
+{
+  "name": "crm",
+  "version": "1.0.0",
+  "description": "Personal CRM skill — manage deals, log activity, draft follow-ups",
+  "entry": "main.js",
+  "commands": [
+    { "name": "/pipeline",      "description": "Show your full deal pipeline" },
+    { "name": "/deal",          "description": "/deal <name> — show deal details and activity history" },
+    { "name": "/add_deal",      "description": "Add a new deal (guided flow)" },
+    { "name": "/log",           "description": "/log <deal name> — log activity using natural language" },
+    { "name": "/draft",         "description": "/draft <deal name> — draft a follow-up email" },
+    { "name": "/send_draft",    "description": "/send_draft <dealId> — send the pending draft" },
+    { "name": "/discard_draft", "description": "/discard_draft <dealId> — discard the pending draft" },
+    { "name": "/move",          "description": "/move <deal name> — advance deal to next stage" },
+    { "name": "/won",           "description": "/won <deal name> — mark deal as won" },
+    { "name": "/lost",          "description": "/lost <deal name> — mark deal as lost (asks for reason)" },
+    { "name": "/snooze",        "description": "/snooze <deal name> — push follow-up back 3 days" }
+  ],
+  "schedule": {
+    "check": "*/15 * * * *",
+    "morningDigest": "0 9 * * *"
+  }
+}
