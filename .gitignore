@@ -1,3 +1,3 @@
 .worktrees/
 node_modules/
-crm-mcp/.gmail-credentials.json
+crm-mcp/.google-credentials.json
