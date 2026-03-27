@@ -7,6 +7,7 @@ import { get_pipeline, get_deal, get_deal_context } from './tools/pipeline.js';
 import { create_deal, update_deal, move_stage, close_deal, snooze_deal, update_contact } from './tools/deals.js';
 import { log_activity } from './tools/activity.js';
 import { send_email } from './tools/email.js';
+import { get_today_briefing } from './tools/calendar.js';
 
 export const TOOLS = [
   {
@@ -149,13 +150,18 @@ export const TOOLS = [
       },
       required: ['to', 'subject', 'body', 'deal_id']
     }
+  },
+  {
+    name: 'get_today_briefing',
+    description: "Fetch today's Google Calendar events and match them to CRM deals. Returns event list with deal context and recent activities for matched events.",
+    inputSchema: { type: 'object', properties: {}, required: [] }
   }
 ];
 
 export const handlers = {
   get_pipeline, get_deal, get_deal_context,
   create_deal, update_deal, move_stage, close_deal, snooze_deal, update_contact,
-  log_activity, send_email,
+  log_activity, send_email, get_today_briefing,
   unknown_tool: async () => { throw new Error('Unknown tool'); }
 };
 
