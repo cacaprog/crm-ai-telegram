@@ -1,6 +1,5 @@
 import * as db from '../db/index.js';
-
-const STAGES = ['lead','discovery','validation','scoping','proposal','negotiation','closed_won','closed_lost'];
+import { STAGES } from '../lib/stages.js';
 
 export async function get_pipeline() {
   const deals = await db.deals.findAll();
