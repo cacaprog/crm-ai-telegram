@@ -42,6 +42,7 @@ export const TOOLS = [
         contact_name: { type: 'string' },
         company: { type: 'string' },
         email: { type: 'string' },
+        source: { type: 'string', enum: ['cold', 'referral', 'inbound'] },
         stage: { type: 'string', enum: ['lead','discovery','validation','scoping','proposal','negotiation'] },
         value: { type: 'number' },
         notes: { type: 'string' }

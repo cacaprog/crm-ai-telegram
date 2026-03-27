@@ -3,7 +3,8 @@ import { STAGES } from '../lib/stages.js';
 
 export async function get_pipeline() {
   const deals = await db.deals.findAll();
-  const grouped = Object.fromEntries(STAGES.map(s => [s, []]));
+  const ACTIVE_STAGES = STAGES.filter(s => !s.startsWith('closed'));
+  const grouped = Object.fromEntries(ACTIVE_STAGES.map(s => [s, []]));
   for (const deal of deals) {
     if (grouped[deal.stage]) grouped[deal.stage].push(deal);
   }

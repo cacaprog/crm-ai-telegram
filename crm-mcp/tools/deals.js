@@ -1,8 +1,8 @@
 import * as db from '../db/index.js';
 import { STAGES } from '../lib/stages.js';
 
-export async function create_deal({ title, contact_name, company, email, stage, value, notes }) {
-  const contact = await db.contacts.create({ name: contact_name, company, email, source: 'cold' });
+export async function create_deal({ title, contact_name, company, email, stage, value, notes, source = 'cold' }) {
+  const contact = await db.contacts.create({ name: contact_name, company, email, source });
   const deal = await db.deals.create({ contactId: contact.id, title, value, notes });
   if (stage && stage !== 'lead') {
     await db.deals.update(deal.id, { stage });
@@ -11,7 +11,8 @@ export async function create_deal({ title, contact_name, company, email, stage, 
 }
 
 export async function update_deal({ deal_id, fields }) {
-  return await db.deals.update(deal_id, fields);
+  const { stage: _stage, ...safeFields } = fields;
+  return await db.deals.update(deal_id, safeFields);
 }
 
 export async function move_stage({ deal_id }) {
