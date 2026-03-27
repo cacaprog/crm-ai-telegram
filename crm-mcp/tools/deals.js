@@ -39,3 +39,11 @@ export async function snooze_deal({ deal_id, days = 3 }) {
   const nextActionDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
   return await db.deals.update(deal_id, { nextActionDate });
 }
+
+export async function update_contact({ deal_id, email, phone, name, company, role, linkedin_url }) {
+  const deal = await db.deals.findById(deal_id);
+  if (!deal) throw new Error(`Deal not found: ${deal_id}`);
+  return await db.contacts.update(deal.contact_id, {
+    name, company, role, email, phone, linkedinUrl: linkedin_url
+  });
+}

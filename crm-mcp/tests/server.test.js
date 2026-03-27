@@ -11,7 +11,8 @@ jest.unstable_mockModule('../tools/deals.js', () => ({
   update_deal: jest.fn(),
   move_stage: jest.fn(),
   close_deal: jest.fn(),
-  snooze_deal: jest.fn()
+  snooze_deal: jest.fn(),
+  update_contact: jest.fn()
 }));
 jest.unstable_mockModule('../tools/activity.js', () => ({
   log_activity: jest.fn()
@@ -22,7 +23,7 @@ jest.unstable_mockModule('../tools/email.js', () => ({
 
 const { handlers, TOOLS } = await import('../index.js');
 
-test('TOOLS lists all 10 tools', () => {
+test('TOOLS lists all 11 tools', () => {
   const names = TOOLS.map(t => t.name);
   expect(names).toContain('get_pipeline');
   expect(names).toContain('get_deal');
@@ -32,9 +33,10 @@ test('TOOLS lists all 10 tools', () => {
   expect(names).toContain('move_stage');
   expect(names).toContain('close_deal');
   expect(names).toContain('snooze_deal');
+  expect(names).toContain('update_contact');
   expect(names).toContain('log_activity');
   expect(names).toContain('send_email');
-  expect(names).toHaveLength(10);
+  expect(names).toHaveLength(11);
 });
 
 test('handlers dispatch to correct tool function', async () => {

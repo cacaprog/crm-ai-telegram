@@ -4,7 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 
 import { get_pipeline, get_deal, get_deal_context } from './tools/pipeline.js';
-import { create_deal, update_deal, move_stage, close_deal, snooze_deal } from './tools/deals.js';
+import { create_deal, update_deal, move_stage, close_deal, snooze_deal, update_contact } from './tools/deals.js';
 import { log_activity } from './tools/activity.js';
 import { send_email } from './tools/email.js';
 
@@ -105,6 +105,23 @@ export const TOOLS = [
     }
   },
   {
+    name: 'update_contact',
+    description: 'Update contact fields (email, phone, name, company, role, linkedin_url) for a deal',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        deal_id:      { type: 'integer' },
+        email:        { type: 'string' },
+        phone:        { type: 'string' },
+        name:         { type: 'string' },
+        company:      { type: 'string' },
+        role:         { type: 'string' },
+        linkedin_url: { type: 'string' }
+      },
+      required: ['deal_id']
+    }
+  },
+  {
     name: 'log_activity',
     description: 'Log an activity for a deal and optionally update the next action',
     inputSchema: {
@@ -137,7 +154,7 @@ export const TOOLS = [
 
 export const handlers = {
   get_pipeline, get_deal, get_deal_context,
-  create_deal, update_deal, move_stage, close_deal, snooze_deal,
+  create_deal, update_deal, move_stage, close_deal, snooze_deal, update_contact,
   log_activity, send_email,
   unknown_tool: async () => { throw new Error('Unknown tool'); }
 };
