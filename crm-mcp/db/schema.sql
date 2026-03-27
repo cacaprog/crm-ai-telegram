@@ -1,15 +1,24 @@
-CREATE TYPE deal_stage AS ENUM (
-  'lead', 'discovery', 'validation', 'scoping',
-  'proposal', 'negotiation', 'closed_won', 'closed_lost'
-);
+DO $$ BEGIN
+  CREATE TYPE deal_stage AS ENUM (
+    'lead', 'discovery', 'validation', 'scoping',
+    'proposal', 'negotiation', 'closed_won', 'closed_lost'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE TYPE activity_type AS ENUM (
-  'call', 'email', 'meeting', 'note', 'proposal_sent'
-);
+DO $$ BEGIN
+  CREATE TYPE activity_type AS ENUM (
+    'call', 'email', 'meeting', 'note', 'proposal_sent'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE TYPE reminder_status AS ENUM (
-  'pending', 'snoozed', 'done'
-);
+DO $$ BEGIN
+  CREATE TYPE reminder_status AS ENUM (
+    'pending', 'snoozed', 'done'
+  );
+EXCEPTION WHEN duplicate_object THEN NULL;
+END $$;
 
 CREATE TABLE IF NOT EXISTS contacts (
   id           SERIAL PRIMARY KEY,

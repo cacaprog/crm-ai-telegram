@@ -29,7 +29,7 @@ describe('deals', () => {
   });
 
   afterAll(async () => {
-    await contacts.delete(contactId);
+    if (contactId) await contacts.delete(contactId);
   });
 
   test('creates deal with default stage lead', async () => {
@@ -47,5 +47,36 @@ describe('deals', () => {
     });
     expect(updated.next_action).toBe('Send proposal');
     await deals.delete(deal.id);
+  });
+});
+
+describe('activities', () => {
+  let contactId;
+  let dealId;
+
+  beforeAll(async () => {
+    const c = await contacts.create({ name: 'Activity Contact', source: 'cold' });
+    contactId = c.id;
+    const d = await deals.create({ contactId, title: 'Activity Deal' });
+    dealId = d.id;
+  });
+
+  afterAll(async () => {
+    if (dealId) await deals.delete(dealId);
+    if (contactId) await contacts.delete(contactId);
+  });
+
+  test('creates activity and retrieves by deal', async () => {
+    const activity = await activities.create({
+      dealId,
+      type: 'call',
+      summary: 'Initial call'
+    });
+    expect(activity.id).toBeDefined();
+    expect(activity.type).toBe('call');
+
+    const found = await activities.findByDeal(dealId);
+    expect(found.length).toBeGreaterThan(0);
+    expect(found[0].summary).toBe('Initial call');
   });
 });
