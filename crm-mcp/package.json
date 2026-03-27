@@ -17,7 +17,6 @@
     "jest": "^29.0.0"
   },
   "jest": {
-    "extensionsToTreatAsEsm": [".js"],
     "transform": {}
   }
 }
