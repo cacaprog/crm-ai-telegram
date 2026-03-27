@@ -1,9 +1,0 @@
-{
-  "name": "crm-calendar",
-  "version": "1.0.0",
-  "main": "src/index.js",
-  "dependencies": {
-    "googleapis": "^144.0.0",
-    "crm-db": "*"
-  }
-}
