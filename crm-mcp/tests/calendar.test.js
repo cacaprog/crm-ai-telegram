@@ -33,6 +33,12 @@ jest.unstable_mockModule('googleapis', () => ({
                 start: { dateTime: '2026-03-27T14:00:00Z' },
                 end: { dateTime: '2026-03-27T15:00:00Z' },
                 attendees: []
+              },
+              {
+                summary: 'Meeting with João Silva',
+                start: { dateTime: '2026-03-27T16:00:00Z' },
+                end: { dateTime: '2026-03-27T17:00:00Z' },
+                attendees: []
               }
             ]
           }
@@ -58,7 +64,7 @@ test('returns today date and events array', async () => {
   const result = await get_today_briefing();
   expect(result.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   expect(Array.isArray(result.events)).toBe(true);
-  expect(result.events).toHaveLength(2);
+  expect(result.events).toHaveLength(3);
 });
 
 test('matches event to deal by attendee email', async () => {
@@ -81,4 +87,11 @@ test('returns attendee email list', async () => {
   const result = await get_today_briefing();
   const matched = result.events.find(e => e.title === 'Call with Acme');
   expect(matched.attendees).toContain('joao@acme.com');
+});
+
+test('matches event to deal by contact name in title', async () => {
+  const result = await get_today_briefing();
+  const matched = result.events.find(e => e.title === 'Meeting with João Silva');
+  expect(matched.deal).not.toBeNull();
+  expect(matched.deal.id).toBe(1);
 });

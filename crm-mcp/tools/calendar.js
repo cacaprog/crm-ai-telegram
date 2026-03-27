@@ -37,7 +37,7 @@ export async function get_today_briefing() {
     if (!matchedDeal) {
       const titleLower = title.toLowerCase();
       matchedDeal = allDeals.find(d =>
-        d.title.toLowerCase().includes(titleLower) ||
+        titleLower.includes(d.title.toLowerCase()) ||
         titleLower.includes(d.contact_name.toLowerCase()) ||
         d.contact_name.toLowerCase().includes(titleLower)
       );
