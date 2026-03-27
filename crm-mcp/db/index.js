@@ -24,6 +24,20 @@ export const contacts = {
   },
   async delete(id) {
     await pool.query('DELETE FROM contacts WHERE id=$1', [id]);
+  },
+  async update(id, { name, company, role, email, phone, linkedinUrl } = {}) {
+    const { rows } = await pool.query(
+      `UPDATE contacts SET
+         name         = COALESCE($2, name),
+         company      = COALESCE($3, company),
+         role         = COALESCE($4, role),
+         email        = COALESCE($5, email),
+         phone        = COALESCE($6, phone),
+         linkedin_url = COALESCE($7, linkedin_url)
+       WHERE id=$1 RETURNING *`,
+      [id, name, company, role, email, phone, linkedinUrl]
+    );
+    return rows[0];
   }
 };
 

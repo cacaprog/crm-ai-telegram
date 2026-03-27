@@ -18,6 +18,18 @@ describe('contacts', () => {
 
     await contacts.delete(contact.id);
   });
+
+  test('updates email and phone', async () => {
+    const contact = await contacts.create({ name: 'Update Me', source: 'cold' });
+    const updated = await contacts.update(contact.id, {
+      email: 'updated@example.com',
+      phone: '+351 910 000 000'
+    });
+    expect(updated.email).toBe('updated@example.com');
+    expect(updated.phone).toBe('+351 910 000 000');
+    expect(updated.name).toBe('Update Me'); // untouched fields preserved
+    await contacts.delete(contact.id);
+  });
 });
 
 describe('deals', () => {
