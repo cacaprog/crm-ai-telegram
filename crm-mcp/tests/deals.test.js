@@ -49,6 +49,7 @@ test('close_deal logs reason activity on lost', async () => {
   const { activities } = await import('../db/index.js');
   await close_deal({ deal_id: 20, outcome: 'lost', reason: 'Budget cut' });
   expect(activities.create).toHaveBeenCalledWith(expect.objectContaining({
+    dealId: 20,
     type: 'note',
     summary: expect.stringContaining('Budget cut')
   }));
