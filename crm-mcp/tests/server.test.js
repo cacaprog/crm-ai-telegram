@@ -30,7 +30,7 @@ jest.unstable_mockModule('../tools/report.js', () => ({
 
 const { handlers, TOOLS } = await import('../index.js');
 
-test('TOOLS lists all 13 tools', () => {
+test('TOOLS lists all 14 tools', () => {
   const names = TOOLS.map(t => t.name);
   expect(names).toContain('get_pipeline');
   expect(names).toContain('get_deal');
@@ -45,7 +45,8 @@ test('TOOLS lists all 13 tools', () => {
   expect(names).toContain('send_email');
   expect(names).toContain('get_today_briefing');
   expect(names).toContain('get_weekly_report');
-  expect(names).toHaveLength(13);
+  expect(names).toContain('get_report_history');
+  expect(names).toHaveLength(14);
 });
 
 test('handlers dispatch to correct tool function', async () => {

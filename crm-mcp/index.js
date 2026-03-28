@@ -161,13 +161,25 @@ export const TOOLS = [
     name: 'get_weekly_report',
     description: 'Generate the weekly CRM report: stale deals (no contact beyond stage threshold) and week activity snapshot. Persists a snapshot to DB.',
     inputSchema: { type: 'object', properties: {}, required: [] }
-  }
+  },
+  {
+    name: 'get_report_history',
+    description: 'Return the last N weekly report snapshots ordered by week descending. Default 4 weeks.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        weeks: { type: 'integer', description: 'Number of weeks to return. Default 4.' }
+      },
+      required: []
+    }
+  },
 ];
 
 export const handlers = {
   get_pipeline, get_deal, get_deal_context,
   create_deal, update_deal, move_stage, close_deal, snooze_deal, update_contact,
   log_activity, send_email, get_today_briefing, get_weekly_report,
+  get_report_history,
   unknown_tool: async () => { throw new Error('Unknown tool'); }
 };
 

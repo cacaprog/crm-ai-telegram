@@ -111,6 +111,6 @@ export async function get_weekly_report() {
   };
 }
 
-export async function get_report_history() {
-  return getReportHistory();
+export async function get_report_history({ weeks } = {}) {
+  return getReportHistory(weeks ?? 4);
 }

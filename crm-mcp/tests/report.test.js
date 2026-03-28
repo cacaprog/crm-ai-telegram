@@ -119,3 +119,23 @@ describe('get_weekly_report', () => {
     expect(args).toHaveProperty('week_end');
   });
 });
+
+describe('get_report_history', () => {
+  test('returns history from getReportHistory with default 4 weeks', async () => {
+    getReportHistory.mockResolvedValue([
+      { week_start: '2026-03-24', week_end: '2026-03-30', stale_deals: 2, won_deals: 1 }
+    ]);
+
+    const result = await get_report_history({});
+    expect(getReportHistory).toHaveBeenCalledWith(4);
+    expect(result).toHaveLength(1);
+    expect(result[0].week_start).toBe('2026-03-24');
+  });
+
+  test('passes custom weeks parameter', async () => {
+    getReportHistory.mockResolvedValue([]);
+
+    await get_report_history({ weeks: 8 });
+    expect(getReportHistory).toHaveBeenCalledWith(8);
+  });
+});
