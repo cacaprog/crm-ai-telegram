@@ -8,7 +8,7 @@ Personal CRM assistant for B2B consulting. Claude receives Telegram messages, ma
 Telegram ──► Claude Code (--channels plugin:telegram)
                  │
                  ├── crm-mcp/      MCP server (Node.js)
-                 │    ├── tools/   12 CRM tools
+                 │    ├── tools/   14 CRM tools
                  │    └── db/      PostgreSQL via pg
                  │
                  └── CLAUDE.md     Persona + tool instructions
@@ -97,6 +97,8 @@ On the first `send_email` or `get_today_briefing` call, Claude will print an aut
 | `log_activity` | Log call, meeting, email, note |
 | `send_email` | Send via Gmail + log activity |
 | `get_today_briefing` | Today's Calendar events matched to CRM deals |
+| `get_weekly_report` | Stale deals by stage threshold + week snapshot (won/lost/new/activities). Auto-persists snapshot. |
+| `get_report_history` | Last N weekly snapshots for trend comparison (default 4 weeks) |
 
 ## Pipeline Stages
 
@@ -111,7 +113,7 @@ lead → discovery → validation → scoping → proposal → negotiation → c
 ```
 crm-telegram/
 ├── crm-mcp/
-│   ├── index.js          MCP server entry (registers all 12 tools)
+│   ├── index.js          MCP server entry (registers all 14 tools)
 │   ├── package.json
 │   ├── tools/
 │   │   ├── pipeline.js   get_pipeline, get_deal, get_deal_context
@@ -119,14 +121,16 @@ crm-telegram/
 │   │   ├── activity.js   log_activity
 │   │   ├── email.js      send_email
 │   │   ├── calendar.js   get_today_briefing
+│   │   ├── report.js     get_weekly_report, get_report_history
 │   │   └── google-auth.js  shared OAuth2 (Gmail + Calendar)
 │   ├── db/
 │   │   ├── index.js      connection + query helpers
+│   │   ├── reports.js    upsertWeeklyReport, getReportHistory
 │   │   ├── migrate.js    run schema migration
-│   │   └── schema.sql    tables: contacts, deals, activities, reminders
+│   │   └── schema.sql    tables: contacts, deals, activities, reminders, weekly_reports
 │   ├── lib/
 │   │   └── stages.js     pipeline stages constant
-│   └── tests/            Jest test suite (29 tests)
+│   └── tests/            Jest test suite (40 tests)
 ├── CLAUDE.md             CRM persona + tool usage instructions
 ├── .mcp.json             registers crm-mcp with Claude Code
 └── docs/

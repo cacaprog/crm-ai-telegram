@@ -119,6 +119,37 @@ Claude busca o contexto do deal e escreve o e-mail. Sempre pergunta antes de env
 
 ---
 
+## Relatório Semanal
+
+```
+"Relatório semanal"
+"Como foi a semana?"
+"Relatório"
+```
+
+Claude mostra:
+- Deals em risco (sem contato além do threshold por estágio) → cria lembrete automático para cada um
+- Resumo da semana: deals ganhos/perdidos, novos deals, atividades, pipeline ativo
+
+**Thresholds de risco por estágio:**
+
+| Stage | Em risco após |
+|---|---|
+| `lead` / `discovery` / `validation` | 14 dias |
+| `scoping` | 10 dias |
+| `proposal` | 7 dias |
+| `negotiation` | 5 dias |
+
+```
+"Como foi o mês?"
+"Evoluiu o pipeline?"
+"Compara as semanas"
+```
+
+Claude busca as últimas 4 semanas e narra tendências: crescimento do pipeline, variação de deals em risco, ritmo de atividades.
+
+---
+
 ## Agenda do Dia (Briefing)
 
 ```
