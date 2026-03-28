@@ -1,6 +1,6 @@
 import { google } from 'googleapis';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
-import { createInterface } from 'readline';
+import { createServer } from 'http';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -11,11 +11,14 @@ const SCOPES = [
   'https://www.googleapis.com/auth/calendar.readonly'
 ];
 
+const REDIRECT_PORT = 4242;
+const REDIRECT_URI = `http://localhost:${REDIRECT_PORT}`;
+
 export function createOAuth2Client() {
   return new google.auth.OAuth2(
     process.env.GMAIL_CLIENT_ID,
     process.env.GMAIL_CLIENT_SECRET,
-    'urn:ietf:wg:oauth:2.0:oob'
+    REDIRECT_URI
   );
 }
 
@@ -30,9 +33,24 @@ export async function getAuthorizedClient() {
   const authUrl = oauth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
   console.error('\nAuthorize Google by visiting:\n', authUrl);
 
-  const rl = createInterface({ input: process.stdin, output: process.stderr });
-  const code = await new Promise(resolve => rl.question('\nPaste the authorization code: ', resolve));
-  rl.close();
+  const code = await new Promise((resolve, reject) => {
+    const server = createServer((req, res) => {
+      const url = new URL(req.url, REDIRECT_URI);
+      const code = url.searchParams.get('code');
+      if (code) {
+        res.end('Authorization complete. You can close this tab.');
+        server.close();
+        resolve(code);
+      } else {
+        res.end('Missing code.');
+        server.close();
+        reject(new Error('No code in redirect'));
+      }
+    });
+    server.listen(REDIRECT_PORT, () => {
+      console.error(`\nWaiting for Google redirect on http://localhost:${REDIRECT_PORT} ...`);
+    });
+  });
 
   const { tokens } = await oauth2Client.getToken(code);
   oauth2Client.setCredentials(tokens);
