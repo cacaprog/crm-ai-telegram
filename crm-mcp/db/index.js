@@ -1,7 +1,7 @@
 import pg from 'pg';
 const { Pool } = pg;
 
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://localhost/crm'
 });
 
@@ -102,6 +102,18 @@ export const activities = {
       [dealId]
     );
     return rows;
+  },
+  async countByTypeInRange(start, end) {
+    const { rows } = await pool.query(
+      `SELECT type, COUNT(*)::int as count
+       FROM activities
+       WHERE created_at >= $1 AND created_at < $2
+       GROUP BY type`,
+      [start, end]
+    );
+    const byType = { call: 0, meeting: 0, email: 0, note: 0, proposal_sent: 0 };
+    for (const row of rows) byType[row.type] = row.count;
+    return byType;
   }
 };
 

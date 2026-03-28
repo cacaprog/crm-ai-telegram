@@ -70,3 +70,23 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE TRIGGER deals_updated_at
 BEFORE UPDATE ON deals
 FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+
+CREATE TABLE IF NOT EXISTS weekly_reports (
+  id               SERIAL PRIMARY KEY,
+  week_start       DATE NOT NULL UNIQUE,
+  week_end         DATE NOT NULL,
+  stale_deals      INTEGER NOT NULL DEFAULT 0,
+  stale_value      NUMERIC(12,2),
+  won_deals        INTEGER NOT NULL DEFAULT 0,
+  won_value        NUMERIC(12,2),
+  lost_deals       INTEGER NOT NULL DEFAULT 0,
+  new_deals        INTEGER NOT NULL DEFAULT 0,
+  activities_count INTEGER NOT NULL DEFAULT 0,
+  pipeline_value   NUMERIC(12,2),
+  created_at       TIMESTAMPTZ DEFAULT NOW(),
+  updated_at       TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE OR REPLACE TRIGGER weekly_reports_updated_at
+BEFORE UPDATE ON weekly_reports
+FOR EACH ROW EXECUTE FUNCTION update_updated_at();

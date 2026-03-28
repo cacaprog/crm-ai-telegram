@@ -1,4 +1,5 @@
-import { contacts, deals, activities, end } from '../db/index.js';
+import { contacts, deals, activities, end, pool } from '../db/index.js';
+import { upsertWeeklyReport, getReportHistory } from '../db/reports.js';
 
 afterAll(() => end());
 
@@ -90,5 +91,56 @@ describe('activities', () => {
     const found = await activities.findByDeal(dealId);
     expect(found.length).toBeGreaterThan(0);
     expect(found[0].summary).toBe('Initial call');
+  });
+});
+
+describe('reports', () => {
+  const TEST_WEEK_START = '2026-01-05'; // a Monday far from real data
+
+  afterAll(async () => {
+    await pool.query('DELETE FROM weekly_reports WHERE week_start = $1', [TEST_WEEK_START]);
+  });
+
+  test('upserts a weekly report row', async () => {
+    const row = await upsertWeeklyReport({
+      week_start: TEST_WEEK_START,
+      week_end: '2026-01-11',
+      stale_deals: 2,
+      stale_value: 50000,
+      won_deals: 1,
+      won_value: 18000,
+      lost_deals: 0,
+      new_deals: 3,
+      activities_count: 8,
+      pipeline_value: 145000
+    });
+    expect(new Date(row.week_start).toISOString().slice(0, 10)).toBe(TEST_WEEK_START);
+    expect(row.stale_deals).toBe(2);
+    expect(Number(row.won_value)).toBe(18000);
+  });
+
+  test('upsert updates existing row', async () => {
+    const updated = await upsertWeeklyReport({
+      week_start: TEST_WEEK_START,
+      week_end: '2026-01-11',
+      stale_deals: 3,
+      stale_value: 75000,
+      won_deals: 2,
+      won_value: 36000,
+      lost_deals: 1,
+      new_deals: 3,
+      activities_count: 10,
+      pipeline_value: 130000
+    });
+    expect(updated.stale_deals).toBe(3);
+    expect(updated.won_deals).toBe(2);
+  });
+
+  test('getReportHistory returns rows ordered desc', async () => {
+    const history = await getReportHistory(4);
+    expect(Array.isArray(history)).toBe(true);
+    const testRow = history.find(r => new Date(r.week_start).toISOString().slice(0, 10) === TEST_WEEK_START);
+    expect(testRow).toBeDefined();
+    expect(testRow.activities_count).toBe(10);
   });
 });
