@@ -23,10 +23,14 @@ jest.unstable_mockModule('../tools/email.js', () => ({
 jest.unstable_mockModule('../tools/calendar.js', () => ({
   get_today_briefing: jest.fn()
 }));
+jest.unstable_mockModule('../tools/report.js', () => ({
+  get_weekly_report: jest.fn(),
+  get_report_history: jest.fn()
+}));
 
 const { handlers, TOOLS } = await import('../index.js');
 
-test('TOOLS lists all 12 tools', () => {
+test('TOOLS lists all 13 tools', () => {
   const names = TOOLS.map(t => t.name);
   expect(names).toContain('get_pipeline');
   expect(names).toContain('get_deal');
@@ -40,7 +44,8 @@ test('TOOLS lists all 12 tools', () => {
   expect(names).toContain('log_activity');
   expect(names).toContain('send_email');
   expect(names).toContain('get_today_briefing');
-  expect(names).toHaveLength(12);
+  expect(names).toContain('get_weekly_report');
+  expect(names).toHaveLength(13);
 });
 
 test('handlers dispatch to correct tool function', async () => {

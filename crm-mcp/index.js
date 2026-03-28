@@ -8,6 +8,7 @@ import { create_deal, update_deal, move_stage, close_deal, snooze_deal, update_c
 import { log_activity } from './tools/activity.js';
 import { send_email } from './tools/email.js';
 import { get_today_briefing } from './tools/calendar.js';
+import { get_weekly_report, get_report_history } from './tools/report.js';
 
 export const TOOLS = [
   {
@@ -155,13 +156,18 @@ export const TOOLS = [
     name: 'get_today_briefing',
     description: "Fetch today's Google Calendar events and match them to CRM deals. Returns event list with deal context and recent activities for matched events.",
     inputSchema: { type: 'object', properties: {}, required: [] }
+  },
+  {
+    name: 'get_weekly_report',
+    description: 'Generate the weekly CRM report: stale deals (no contact beyond stage threshold) and week activity snapshot. Persists a snapshot to DB.',
+    inputSchema: { type: 'object', properties: {}, required: [] }
   }
 ];
 
 export const handlers = {
   get_pipeline, get_deal, get_deal_context,
   create_deal, update_deal, move_stage, close_deal, snooze_deal, update_contact,
-  log_activity, send_email, get_today_briefing,
+  log_activity, send_email, get_today_briefing, get_weekly_report,
   unknown_tool: async () => { throw new Error('Unknown tool'); }
 };
 

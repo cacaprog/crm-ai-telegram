@@ -58,6 +58,18 @@ export const deals = {
     );
     return rows[0] || null;
   },
+  async findAllWithLastActivity() {
+    const { rows } = await pool.query(
+      `SELECT d.*, c.name as contact_name, c.company, c.email,
+              MAX(a.created_at) as last_activity_at
+       FROM deals d
+       JOIN contacts c ON c.id = d.contact_id
+       LEFT JOIN activities a ON a.deal_id = d.id
+       GROUP BY d.id, c.name, c.company, c.email
+       ORDER BY d.next_action_date NULLS LAST, d.created_at`
+    );
+    return rows;
+  },
   async findAll({ stage } = {}) {
     const conditions = stage ? 'WHERE d.stage=$1' : '';
     const params = stage ? [stage] : [];
